@@ -1,0 +1,16 @@
+FROM ubuntu:18.04
+LABEL name="vijendar"
+LABEL environment="release"
+RUN apt update && apt install openjdk-8-jdk -y
+RUN mkdir -p /spc/reddy
+WORKDIR /spc/reddy
+ENV WORKDIR='/spc/reddy'
+ENV APPLICATION_PATH='spring-petclinic.jar'
+ENV APPLICATION_URL='https://referenceappkhaja.s3-us-west-2.amazonaws.com/spring-petclinic-2.2.0.BUILD-SNAPSHOT.jar'
+RUN useradd reddy
+USER reddy
+ADD ${APPLICATION_URL} "${WORKDIR}/${APPLICATION_PATH}"
+HEALTHCHECK --interval=5m --timeout=3s CMD curl -f http://localhost/ || exit 1
+VOLUME [ "/data/container" ]
+CMD ["java", "-jar", ${WORKDIR}/${APPLICATION_PATH}]
+EXPOSE 8080

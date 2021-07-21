@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  gol:
+    build: . gol_dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - type: volume
+        source: gol_logs
+        target: /var/log
+    networks:
+      - my_network
+  spc:
+    build: . spc_dockerfile
+    ports:
+      - 8082:8080
+    volumes:
+      - type: volume
+        source: spc_logs
+        target: /var/log
+    networks:
+      - my_network
+volumes:
+  gol_logs:
+  spc_logs:
+networks:
+  my_network:
+    driver: bridge
